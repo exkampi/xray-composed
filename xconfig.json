@@ -26,7 +26,7 @@
           "xver": 0,
           "serverNames": ["duckduckgo.com"],
           "privateKey": "${PRIVATE_KEY}",
-          "shortIds": [""]
+          "shortIds": ["${SHORT_IDS}"]
         }
       },
       "sniffing": {
