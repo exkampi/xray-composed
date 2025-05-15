@@ -24,3 +24,5 @@ jq --arg uuid "$CLIENT_UUID" \
 CLIENT_LINK="vless://${CLIENT_UUID}@${SERVER_ADDRESS}:443?security=${SECURITY}&type=${NETWORK}&sni=${SNI}&fp=${FINGERPRINT}&pbk=${PUBLIC_KEY}&flow=${FLOW}&sid=${SHORT_ID}#xray-server"
 
 echo "$CLIENT_LINK" | tee /app/client-vless-url.txt
+qrencode -s 10 -o /app/client-vless-qr.png "$CLIENT_LINK"
+qrencode -t ASCII "$CLIENT_LINK"
