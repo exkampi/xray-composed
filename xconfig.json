@@ -31,6 +31,11 @@
           ],
           "privateKey": "${PRIVATE_KEY}",
           "shortIds": ["${SHORT_IDS}"]
+        },
+        "sniffing": {
+          "enabled": true,
+          "destOverride": ["http", "tls", "quic", "fakedns", "fakedns+others"],
+          "metadataOnly": false
         }
       },
       "sniffing": {
