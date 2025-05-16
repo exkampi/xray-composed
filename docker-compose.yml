@@ -11,7 +11,7 @@ services:
       - ./:/app/tmp
     entrypoint: |
       sh -c "
-        apk add --no-cache curl openssl util-linux jq qrencode && 
+        apk add --no-cache curl openssl util-linux jq libqrencode-tools && 
         cp /app/tmp/xconfig.json /app/xconfig.json &&
         cp /app/tmp/init-xray-server.sh /app/init-xray-server.sh &&
         chmod +x /app/init-xray-server.sh &&
