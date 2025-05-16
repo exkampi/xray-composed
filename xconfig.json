@@ -52,8 +52,13 @@
       "tag": "block"
     },
     {
+      "tag": "dns-out",
       "protocol": "dns",
-      "tag": "dns-out"
+      "settings": {
+        "network": "tcp,udp",
+        "address": "1.1.1.1",
+        "port": 53
+      }
     }
   ],
   "dns": {
