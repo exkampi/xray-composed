@@ -12,6 +12,7 @@ FLOW=$(jq -r '.inbounds[0].settings.clients[0].flow' "$CONFIG_FILE")
 SERVER_ADDRESS=$(curl -s https://api.ipify.org?format=text)
 SECURITY=$(jq -r '.inbounds[0].streamSettings.security' "$CONFIG_FILE")
 NETWORK=$(jq -r '.inbounds[0].streamSettings.network' "$CONFIG_FILE")
+SERVER_NAME="xray-server-$(openssl rand -base64 6 | tr -dc A-Za-z0-9 | head -c 5)"
 
 jq --arg uuid "$CLIENT_UUID" \
    --arg private_key "$PRIVATE_KEY" \
@@ -21,7 +22,7 @@ jq --arg uuid "$CLIENT_UUID" \
     .inbounds[0].streamSettings.realitySettings.shortIds = [$short_id]' \
    "$CONFIG_FILE" > /tmp/xconfig_tmp.json && mv /tmp/xconfig_tmp.json "$CONFIG_FILE"
 
-CLIENT_LINK="vless://${CLIENT_UUID}@${SERVER_ADDRESS}:443?security=${SECURITY}&type=${NETWORK}&sni=${SNI}&fp=${FINGERPRINT}&pbk=${PUBLIC_KEY}&flow=${FLOW}&sid=${SHORT_ID}#xray-server"
+CLIENT_LINK="vless://${CLIENT_UUID}@${SERVER_ADDRESS}:443?security=${SECURITY}&type=${NETWORK}&sni=${SNI}&fp=${FINGERPRINT}&pbk=${PUBLIC_KEY}&flow=${FLOW}&sid=${SHORT_ID}#${SERVER_NAME}"
 
 echo "$CLIENT_LINK" | tee /app/client-vless-url.txt
 qrencode -s 10 -o /app/client-vless-qr.png "$CLIENT_LINK"
