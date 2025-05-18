@@ -26,7 +26,9 @@
           "dest": "duckduckgo.com:443",
           "xver": 0,
           "serverNames": [
-            "duckduckgo.com"
+            "duckduckgo.com",
+            "google.com",
+            "github.com"
           ],
           "privateKey": "${PRIVATE_KEY}",
           "shortIds": ["${SHORT_IDS}"]
@@ -77,6 +79,11 @@
   "routing": {
     "domainStrategy": "IPIfNonMatch",
     "rules": [
+      {
+        "type": "field",
+        "ip": ["geoip:private"],
+        "outboundTag": "block"
+      },
       {
         "type": "field",
         "port": 53,
