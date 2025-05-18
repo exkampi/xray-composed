@@ -23,20 +23,18 @@
         "security": "reality",
         "realitySettings": {
           "show": false,
-          "dest": "cloudflare.com:443",
+          "dest": "duckduckgo.com:443",
           "xver": 0,
           "serverNames": [
-            "cloudflare.com"
+            "duckduckgo.com"
           ],
+          "fingerprint": "chrome",
           "privateKey": "${PRIVATE_KEY}",
           "shortIds": ["${SHORT_IDS}"]
         },
         "sniffing": {
-          "enabled": true,
-          "destOverride": ["http", "tls", "quic", "fakedns", "fakedns+others"],
-          "metadataOnly": false,
-          "domainsExcluded": [],
-          "routeOnly": false
+          "enabled": false,
+          "routeOnly": true
         }
       }
     }
