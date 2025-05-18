@@ -44,7 +44,7 @@
       "protocol": "freedom",
       "tag": "direct",
       "settings": {
-        "domainStrategy": "UseIP"
+        "domainStrategy": "UseIPv4"
       }
     },
     {
@@ -78,7 +78,7 @@
         "ip": [
           "::/0"
         ],
-        "outboundTag": "blackhole"
+        "outboundTag": "block"
       },
       {
         "type": "field",
