@@ -1,29 +1,19 @@
 #!/bin/sh
 
-_x25519=$(xray x25519)
-PRIVATE_KEY=$(echo "$_x25519" | awk -F': ' '/Private key/{print $2}')
-PUBLIC_KEY=$(echo "$_x25519" | awk -F': ' '/Public key/{print $2}')
-CLIENT_UUID=$(uuidgen)
-SHORT_ID=$(openssl rand -hex 8 | head -c 8)
+SS_METHOD="chacha20-ietf-poly1305"
+SS_PASSWORD=$(uuidgen)
 CONFIG_FILE="/app/xconfig.json"
-SNI=$(jq -r '.inbounds[0].streamSettings.realitySettings.serverNames[0]' "$CONFIG_FILE")
-FINGERPRINT=$(jq -r '.inbounds[0].streamSettings.realitySettings.fingerprint' "$CONFIG_FILE")
-FLOW=$(jq -r '.inbounds[0].settings.clients[0].flow' "$CONFIG_FILE")
 SERVER_ADDRESS=$(curl -s https://api.ipify.org?format=text)
-SECURITY=$(jq -r '.inbounds[0].streamSettings.security' "$CONFIG_FILE")
-NETWORK=$(jq -r '.inbounds[0].streamSettings.network' "$CONFIG_FILE")
-SERVER_NAME="xray-server-$(openssl rand -base64 6 | tr -dc A-Za-z0-9 | head -c 5)"
+SERVER_PORT=$(jq -r '.inbounds[0].port' "$CONFIG_FILE")
+SERVER_NAME="server-$(openssl rand -base64 6 | tr -dc A-Za-z0-9 | head -c 5)"
 
-jq --arg uuid "$CLIENT_UUID" \
-   --arg private_key "$PRIVATE_KEY" \
-   --arg short_id "$SHORT_ID" \
-   '.inbounds[0].settings.clients[0].id = $uuid |
-    .inbounds[0].streamSettings.realitySettings.privateKey = $private_key |
-    .inbounds[0].streamSettings.realitySettings.shortIds = [$short_id]' \
+jq --arg password "$SS_PASSWORD" \
+   '.inbounds[0].settings.password = $password' \
    "$CONFIG_FILE" > /tmp/xconfig_tmp.json && mv /tmp/xconfig_tmp.json "$CONFIG_FILE"
 
-CLIENT_LINK="vless://${CLIENT_UUID}@${SERVER_ADDRESS}:443?security=${SECURITY}&type=${NETWORK}&sni=${SNI}&fp=${FINGERPRINT}&pbk=${PUBLIC_KEY}&flow=${FLOW}&sid=${SHORT_ID}#${SERVER_NAME}"
+ENCODED=$(echo -n "${SS_METHOD}:${SS_PASSWORD}" | base64 -w 0)
+CLIENT_LINK="ss://${ENCODED}@${SERVER_ADDRESS}:${SERVER_PORT}#${SERVER_NAME}"
 
-echo "$CLIENT_LINK" | tee /app/client-vless-url.txt
-qrencode -s 10 -o /app/client-vless-qr.png "$CLIENT_LINK"
+echo "$CLIENT_LINK" | tee /app/client-ss-url.txt
+qrencode -s 10 -o /app/client-ss-qr.png "$CLIENT_LINK"
 qrencode -t UTF8 "$CLIENT_LINK"
